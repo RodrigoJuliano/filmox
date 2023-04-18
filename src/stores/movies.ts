@@ -127,5 +127,6 @@ export const useMoviesStore = defineStore('movies', () => {
     loadWatchedMovies,
     toggleWatchlist,
     toggleWatchedlist,
+    errorDiscover,
   };
 });

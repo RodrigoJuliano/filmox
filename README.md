@@ -1,41 +1,29 @@
-# Quasar App (quasar-test)
+# Filmox (WIP)
 
-A Quasar Project
+Filmox is a movie watchlist application. It is built with [Quasar Framework](https://quasar.dev/), [Vue.Js](https://vuejs.org) and [Pinia](https://pinia.vuejs.org/). All the data is get from [<img src="src/assets/tmdb-logo.svg" height="10" alt="TMDb Logo">](https://www.themoviedb.org/) API.
 
-## Install the dependencies
-```bash
-yarn
-# or
-npm install
+## Screenshot
+
+![Filmox](.github/screenshot.png)
+
+## Live Preview
+
+Available at https://RodrigoJuliano.github.io/filmox/.
+
+## Project Setup
+
+```sh
+pnpm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
+### Compile and Hot-Reload for Development
+
+```sh
+pnpm run dev
 ```
 
+### Compile and Minify for Production
 
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
+```sh
+pnpm run build
 ```
-
-
-### Format the files
-```bash
-yarn format
-# or
-npm run format
-```
-
-
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
