@@ -1,0 +1,2 @@
+# Make the linguist ignore the .js config files in the root
+/*.js linguist-detectable=false
