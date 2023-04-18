@@ -215,5 +215,7 @@ module.exports = configure(function (/* ctx */) {
       // extendBexScriptsConf (esbuildConf) {}
       // extendBexManifestJson (json) {}
     },
+
+    extras: ['material-icons', 'fontawesome-v6'],
   };
 });

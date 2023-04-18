@@ -23,10 +23,24 @@
           >
             <span>{{ props.movie.title }}</span>
             <div class="row no-wrap q-gutter-sm">
-              <q-btn size="10px" round color="grey-9" icon="visibility">
+              <q-btn
+                size="10px"
+                round
+                color="grey-9"
+                icon="visibility"
+                :text-color="props.watched ? 'green-6' : 'white'"
+                @click="onClickToggleWatched(props.movie.id)"
+              >
                 <q-tooltip :delay="700">Mark as watched </q-tooltip>
               </q-btn>
-              <q-btn size="10px" round color="grey-9" icon="add">
+              <q-btn
+                size="10px"
+                round
+                color="grey-9"
+                :icon="props.watchlisted ? 'done' : 'add'"
+                :text-color="props.watchlisted ? 'green-6' : 'white'"
+                @click="onClickToggleWatchlist(props.movie.id)"
+              >
                 <q-tooltip :delay="700">Add to watchlist </q-tooltip>
               </q-btn>
             </div>
@@ -55,12 +69,25 @@ import { ref } from 'vue';
 import { useElementHover, useFocusWithin } from '@vueuse/core';
 import { Movie } from './models';
 
-const props = defineProps<{ movie: Movie }>();
+const props =
+  defineProps<{ movie: Movie; watched: boolean; watchlisted: boolean }>();
+const emit = defineEmits<{
+  (e: 'toggleWatched', id: number): void;
+  (e: 'toggleWatchlist', id: number): void;
+}>();
 
 const cardRef = ref<HTMLDivElement>();
 
 const hovering = useElementHover(cardRef, { delayLeave: 150 });
 const { focused } = useFocusWithin(cardRef);
+
+const onClickToggleWatched = (id: number) => {
+  emit('toggleWatched', id);
+};
+
+const onClickToggleWatchlist = (id: number) => {
+  emit('toggleWatchlist', id);
+};
 </script>
 
 <style scoped>

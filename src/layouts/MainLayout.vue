@@ -3,10 +3,13 @@
     <q-header elevated class="bg-primary text-white bg-black">
       <q-toolbar>
         <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
-          </q-avatar>
-          Filmox
+          <q-icon
+            name="fa-solid fa-film"
+            class="q-pa-sm"
+            color="white"
+            size="24px"
+          />
+          <span class="vertical-middle">Filmox</span>
         </q-toolbar-title>
         <q-tabs>
           <q-route-tab to="/" label="Discover" />
