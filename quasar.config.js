@@ -11,7 +11,7 @@
 const { configure } = require('quasar/wrappers');
 const path = require('path');
 
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function (ctx) {
   return {
     eslint: {
       // fix: true,
@@ -65,7 +65,7 @@ module.exports = configure(function (/* ctx */) {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      publicPath: '/filmox/',
+      // publicPath: '/filmox/',
       // analyze: true,
       // env: {},
       // rawDefine: {}
@@ -74,7 +74,15 @@ module.exports = configure(function (/* ctx */) {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+      extendViteConf(viteConf) {
+        if (ctx.prod) {
+          viteConf.esbuild = {
+            // Remove console.log calls from production
+            pure: ['console.log'],
+          };
+        }
+      },
+
       // viteVuePluginOptions: {},
 
       vitePlugins: [

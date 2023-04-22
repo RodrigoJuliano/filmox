@@ -60,6 +60,9 @@
           </div>
         </q-card-section>
       </transition>
+      <template v-slot:loading>
+        <q-skeleton style="width: 250px; aspect-ratio: 2/3" />
+      </template>
     </q-img>
   </q-card>
 </template>
@@ -69,8 +72,12 @@ import { ref } from 'vue';
 import { useElementHover, useFocusWithin } from '@vueuse/core';
 import { Movie } from './models';
 
-const props =
-  defineProps<{ movie: Movie; watched: boolean; watchlisted: boolean }>();
+const props = defineProps<{
+  movie: Movie;
+  watched: boolean;
+  watchlisted: boolean;
+}>();
+
 const emit = defineEmits<{
   (e: 'toggleWatched', id: number): void;
   (e: 'toggleWatchlist', id: number): void;

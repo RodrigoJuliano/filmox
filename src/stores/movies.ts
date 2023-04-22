@@ -22,9 +22,7 @@ export const useMoviesStore = defineStore('movies', () => {
   } = useFetch(urlDiscover).json();
 
   watch(dataDiscover, (data) => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(data);
-    }
+    console.log(data);
     moviesDiscover.value = moviesDiscover.value.concat(data.results);
     pagesLoaded.value += 1;
   });
@@ -48,9 +46,7 @@ export const useMoviesStore = defineStore('movies', () => {
           return response.json();
         })
         .then((response) => {
-          if (process.env.NODE_ENV === 'development') {
-            console.log(response);
-          }
+          console.log(response);
           moviesWatchlist.value.push(response);
         });
     });
@@ -70,9 +66,7 @@ export const useMoviesStore = defineStore('movies', () => {
           return response.json();
         })
         .then((response) => {
-          if (process.env.NODE_ENV === 'development') {
-            console.log(response);
-          }
+          console.log(response);
           moviesWatched.value.push(response);
         });
     });

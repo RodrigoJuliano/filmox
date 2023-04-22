@@ -23,7 +23,7 @@
 
     <q-footer class="bg-grey-10 text-white q-pa-lg text-center vertical-middle">
       <a href="https://www.themoviedb.org/" target="_blank">
-        <q-img src="src/assets/tmdb-logo.svg" width="90px" />
+        <q-img src="~assets/tmdb-logo.svg" width="90px" />
       </a>
       This product uses the TMDb API but is not endorsed or certified by TMDb
     </q-footer>
