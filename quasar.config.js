@@ -65,7 +65,7 @@ module.exports = configure(function (ctx) {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      // publicPath: '/filmox/',
+      publicPath: '/filmox/',
       // analyze: true,
       // env: {},
       // rawDefine: {}
