@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-ma-lg">
-    <h2 class="text-center text-h4">Discover</h2>
+    <h2 class="text-center text-h4">Search results for '{{ query }}'</h2>
     <div class="row justify-center q-gutter-lg q-pb-lg">
       <MovieCard
         v-for="movie in movies"
@@ -23,15 +23,20 @@
 </template>
 
 <script setup lang="ts">
-import { useWatchlistStore, useWatchedlistStore } from 'stores/movies';
+import { useWatchedlistStore, useWatchlistStore } from 'stores/movies';
 import { useFetchMoveis } from '../composables/useFetchMovies';
 import MovieCard from 'components/MovieCard.vue';
+
+const props = defineProps<{
+  query: string;
+}>();
 
 const watchlistStore = useWatchlistStore();
 const watchedlistStore = useWatchedlistStore();
 
-const { movies, loading, error, fetchMoreMovies } = useFetchMoveis('/discover/movie', {
+const { movies, loading, error, fetchMoreMovies } = useFetchMoveis('/search/movie', {
   include_adult: 'false',
+  query: props.query,
 });
 </script>
 

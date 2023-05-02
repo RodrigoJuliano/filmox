@@ -12,6 +12,9 @@
       "layouts/*": ["src/layouts/*"],
       "pages/*": ["src/pages/*"],
       "stores/*": ["src/stores/*"]
-    }
+    },
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true
   }
 }

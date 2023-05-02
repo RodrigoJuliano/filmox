@@ -9,8 +9,17 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/watchlist',
     component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/WatchlistPage.vue') }],
+  },
+  {
+    path: '/search',
+    component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/WatchlistPage.vue') },
+      {
+        path: '',
+        component: () => import('pages/SearchResultsPage.vue'),
+        props: (route) => ({ query: route.query.q }),
+      },
     ],
   },
 

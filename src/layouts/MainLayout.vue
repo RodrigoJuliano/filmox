@@ -1,24 +1,9 @@
 <template>
   <q-layout view="hHh lpR fff">
-    <q-header elevated class="bg-primary text-white bg-black">
-      <q-toolbar>
-        <q-toolbar-title>
-          <q-icon
-            name="fa-solid fa-film"
-            class="q-pa-sm"
-            color="white"
-            size="24px"
-          />
-          <span class="vertical-middle">Filmox</span>
-        </q-toolbar-title>
-        <q-tabs>
-          <q-route-tab to="/" label="Discover" />
-          <q-route-tab to="/watchlist" label="Watchlist" />
-        </q-tabs>
-      </q-toolbar>
-    </q-header>
+    <TheHeader />
     <q-page-container>
-      <router-view />
+      <!--Using key for reacting to query changes -->
+      <router-view :key="$route.fullPath" />
     </q-page-container>
 
     <q-footer class="bg-grey-10 text-white q-pa-lg text-center vertical-middle">
@@ -30,4 +15,6 @@
   </q-layout>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TheHeader from 'components/TheHeader.vue';
+</script>

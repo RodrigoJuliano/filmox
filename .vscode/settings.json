@@ -3,7 +3,7 @@
   "editor.guides.bracketPairs": true,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+  // "editor.codeActionsOnSave": ["source.fixAll.eslint"],
   "html-css-class-completion.includeGlobPattern": "{src/*.html,src/*.css,node_modules/quasar/dist/quasar.css}",
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
   "typescript.tsdk": "node_modules/typescript/lib"

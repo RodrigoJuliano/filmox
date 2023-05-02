@@ -3,33 +3,25 @@
     <q-img
       :ratio="2 / 3"
       width="250px"
-      :src="'https://image.tmdb.org/t/p/w342' + props.movie.poster_path"
+      :src="movie.poster_path && 'https://image.tmdb.org/t/p/w342' + movie.poster_path"
     >
-      <a
-        href="#undefined"
-        class="all-pointer-events block full-height full-width"
-      ></a>
+      <a href="#undefined" class="all-pointer-events block full-height full-width"></a>
       <transition
         appear
         enter-active-class="animated fadeInUp"
         leave-active-class="animated fadeOutDown"
       >
-        <q-card-section
-          v-if="hovering || focused"
-          class="card-info-section absolute-bottom"
-        >
-          <div
-            class="row no-wrap justify-between items-center q-gutter-sm text-subtitle2"
-          >
-            <span>{{ props.movie.title }}</span>
+        <q-card-section v-if="hovering || focused" class="card-info-section absolute-bottom">
+          <div class="row no-wrap justify-between items-center q-gutter-sm text-subtitle2">
+            <span>{{ movie.title }}</span>
             <div class="row no-wrap q-gutter-sm">
               <q-btn
                 size="10px"
                 round
                 color="grey-9"
                 icon="visibility"
-                :text-color="props.watched ? 'green-6' : 'white'"
-                @click="onClickToggleWatched(props.movie.id)"
+                :text-color="watched ? 'green-6' : 'white'"
+                @click="onClickToggleWatched(movie)"
               >
                 <q-tooltip :delay="700">Mark as watched </q-tooltip>
               </q-btn>
@@ -37,9 +29,9 @@
                 size="10px"
                 round
                 color="grey-9"
-                :icon="props.watchlisted ? 'done' : 'add'"
-                :text-color="props.watchlisted ? 'green-6' : 'white'"
-                @click="onClickToggleWatchlist(props.movie.id)"
+                :icon="watchlisted ? 'done' : 'add'"
+                :text-color="watchlisted ? 'green-6' : 'white'"
+                @click="onClickToggleWatchlist(movie)"
               >
                 <q-tooltip :delay="700">Add to watchlist </q-tooltip>
               </q-btn>
@@ -49,14 +41,14 @@
             <!-- <q-badge class="bg-grey-9"> Action </q-badge> -->
             <q-badge class="bg-grey-9" style="font-size: 14px">
               <q-icon name="star" style="margin-right: 5px" />
-              {{ props.movie.vote_average }}
+              {{ movie.vote_average }}
             </q-badge>
             <div class="text-grey-3" style="">
-              {{ new Date(props.movie.release_date).getFullYear() }}
+              {{ new Date(movie.release_date).getFullYear() }}
             </div>
           </div>
           <div class="overview-text text-grey-5 overflow-hidden">
-            {{ props.movie.overview }}
+            {{ movie.overview }}
           </div>
         </q-card-section>
       </transition>
@@ -72,15 +64,15 @@ import { ref } from 'vue';
 import { useElementHover, useFocusWithin } from '@vueuse/core';
 import { Movie } from './models';
 
-const props = defineProps<{
+defineProps<{
   movie: Movie;
   watched: boolean;
   watchlisted: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'toggleWatched', id: number): void;
-  (e: 'toggleWatchlist', id: number): void;
+  (e: 'toggleWatched', movie: Movie): void;
+  (e: 'toggleWatchlist', movie: Movie): void;
 }>();
 
 const cardRef = ref<HTMLDivElement>();
@@ -88,12 +80,12 @@ const cardRef = ref<HTMLDivElement>();
 const hovering = useElementHover(cardRef, { delayLeave: 150 });
 const { focused } = useFocusWithin(cardRef);
 
-const onClickToggleWatched = (id: number) => {
-  emit('toggleWatched', id);
+const onClickToggleWatched = (movie: Movie) => {
+  emit('toggleWatched', movie);
 };
 
-const onClickToggleWatchlist = (id: number) => {
-  emit('toggleWatchlist', id);
+const onClickToggleWatchlist = (movie: Movie) => {
+  emit('toggleWatchlist', movie);
 };
 </script>
 

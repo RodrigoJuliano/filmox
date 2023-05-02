@@ -6,8 +6,8 @@
         v-for="movie in moviesWatchlist"
         :movie="movie"
         :key="movie.id"
-        :watched="watchedIds.includes(movie.id)"
-        :watchlisted="watchlistIds.includes(movie.id)"
+        :watched="watchedlistStore.moviesIds.includes(movie.id)"
+        :watchlisted="watchlistStore.moviesIds.includes(movie.id)"
         @toggle-watchlist="toggleWatchlist"
         @toggle-watched="toggleWatchedlist"
       />
@@ -41,9 +41,7 @@
       </template>
       <!-- No movies added -->
       <div v-if="!watchedIds.length" class="q-pa-lg">
-        <p class="text-grey q-ma-none">
-          No movies have been marked as watched yet
-        </p>
+        <p class="text-grey q-ma-none">No movies have been marked as watched yet</p>
       </div>
     </div>
   </q-page>
@@ -52,20 +50,17 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useMoviesStore } from 'stores/movies';
+import { useWatchedlistStore, useWatchlistStore } from 'stores/movies';
 import MovieCard from 'components/MovieCard.vue';
 
-const moviesStore = useMoviesStore();
+const watchlistStore = useWatchlistStore();
+const watchedlistStore = useWatchedlistStore();
 
-const { watchlistIds, watchedIds, moviesWatchlist, moviesWatched } =
-  storeToRefs(moviesStore);
+const { moviesIds: watchlistIds, movies: moviesWatchlist } = storeToRefs(watchlistStore);
+const { moviesIds: watchedIds, movies: moviesWatched } = storeToRefs(watchedlistStore);
 
-const {
-  loadWatchlistMovies,
-  loadWatchedMovies,
-  toggleWatchedlist,
-  toggleWatchlist,
-} = moviesStore;
+const { fetchMovies: loadWatchlistMovies, toggle: toggleWatchlist } = watchlistStore;
+const { fetchMovies: loadWatchedMovies, toggle: toggleWatchedlist } = watchedlistStore;
 
 onMounted(() => {
   loadWatchlistMovies();
