@@ -1,7 +1,9 @@
 <template>
-  <q-page class="q-ma-lg">
-    <h2 class="text-center text-h4">Watchlist</h2>
-    <div class="row justify-center q-gutter-lg">
+  <q-page class="q-my-lg q-mx-auto" style="max-width: 1440px">
+    <MovieCardGrid>
+      <template #header>
+        <h2 class="text-h4 q-my-md">Watchlist</h2>
+      </template>
       <MovieCard
         v-for="movie in moviesWatchlist"
         :movie="movie"
@@ -21,9 +23,11 @@
       <div v-if="!watchlistIds.length" class="q-pa-lg">
         <p class="text-grey q-ma-none">No movies have been added yet.</p>
       </div>
-    </div>
-    <h2 class="text-center text-h4">Watched</h2>
-    <div class="row justify-center q-gutter-lg q-pb-lg">
+    </MovieCardGrid>
+    <MovieCardGrid>
+      <template #header>
+        <h2 class="text-h4 q-my-md">Watched</h2>
+      </template>
       <MovieCard
         v-for="movie in moviesWatched"
         :movie="movie"
@@ -35,15 +39,13 @@
       />
       <!-- Show skeletons while fetching -->
       <template v-if="watchedIds.length && !moviesWatched.length">
-        <q-card v-for="id in watchedIds" :key="id">
-          <q-skeleton style="width: 250px; aspect-ratio: 2/3" />
-        </q-card>
+        <MovieCardSkeleton v-for="i in 20" :key="i" />
       </template>
       <!-- No movies added -->
       <div v-if="!watchedIds.length" class="q-pa-lg">
         <p class="text-grey q-ma-none">No movies have been marked as watched yet</p>
       </div>
-    </div>
+    </MovieCardGrid>
   </q-page>
 </template>
 
@@ -52,6 +54,8 @@ import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useWatchedlistStore, useWatchlistStore } from 'stores/movies';
 import MovieCard from 'components/MovieCard.vue';
+import MovieCardGrid from 'components/MovieCardGrid.vue';
+import MovieCardSkeleton from 'components/MovieCardSkeleton.vue';
 
 const watchlistStore = useWatchlistStore();
 const watchedlistStore = useWatchedlistStore();
@@ -67,5 +71,3 @@ onMounted(() => {
   loadWatchedMovies();
 });
 </script>
-
-<style scoped></style>

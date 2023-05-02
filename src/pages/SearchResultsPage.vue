@@ -1,7 +1,9 @@
 <template>
-  <q-page class="q-ma-lg">
-    <h2 class="text-center text-h4">Search results for '{{ query }}'</h2>
-    <div class="row justify-center q-gutter-lg q-pb-lg">
+  <q-page class="q-my-lg q-mx-auto" style="max-width: 1440px">
+    <MovieCardGrid>
+      <template #header>
+        <h2 class="text-h4 q-my-md">Search results for '{{ query }}'</h2>
+      </template>
       <MovieCard
         v-for="movie in movies"
         :movie="movie"
@@ -13,11 +15,9 @@
       />
       <!-- Show skeletons while fetching -->
       <template v-if="loading">
-        <q-card v-for="i in 20" :key="i">
-          <q-skeleton class="skeleton" />
-        </q-card>
+        <MovieCardSkeleton v-for="i in 20" :key="i" />
       </template>
-    </div>
+    </MovieCardGrid>
     <q-btn outline class="flex q-mx-auto" @click="fetchMoreMovies">Load more</q-btn>
   </q-page>
 </template>
@@ -26,6 +26,8 @@
 import { useWatchedlistStore, useWatchlistStore } from 'stores/movies';
 import { useFetchMoveis } from '../composables/useFetchMovies';
 import MovieCard from 'components/MovieCard.vue';
+import MovieCardGrid from 'components/MovieCardGrid.vue';
+import MovieCardSkeleton from 'components/MovieCardSkeleton.vue';
 
 const props = defineProps<{
   query: string;
@@ -39,10 +41,3 @@ const { movies, loading, error, fetchMoreMovies } = useFetchMoveis('/search/movi
   query: props.query,
 });
 </script>
-
-<style scoped>
-.skeleton {
-  width: 250px;
-  aspect-ratio: 2/3;
-}
-</style>

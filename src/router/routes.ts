@@ -4,7 +4,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/DiscoverPage.vue') }],
+    children: [
+      {
+        path: '',
+        component: () => import('pages/DiscoverPage.vue'),
+        props: (route) => ({ sort: route.query.sort }),
+      },
+    ],
   },
   {
     path: '/watchlist',

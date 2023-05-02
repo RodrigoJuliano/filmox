@@ -53,7 +53,7 @@
         </q-card-section>
       </transition>
       <template v-slot:loading>
-        <q-skeleton style="width: 250px; aspect-ratio: 2/3" />
+        <MovieCardSkeleton v-for="i in 20" :key="i" />
       </template>
     </q-img>
   </q-card>
@@ -63,6 +63,7 @@
 import { ref } from 'vue';
 import { useElementHover, useFocusWithin } from '@vueuse/core';
 import { Movie } from './models';
+import MovieCardSkeleton from 'components/MovieCardSkeleton.vue';
 
 defineProps<{
   movie: Movie;
