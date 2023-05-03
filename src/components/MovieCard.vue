@@ -1,17 +1,25 @@
 <template>
-  <q-card bordered ref="cardRef">
-    <q-img
-      :ratio="2 / 3"
-      width="250px"
-      :src="movie.poster_path && 'https://image.tmdb.org/t/p/w342' + movie.poster_path"
-    >
-      <a href="#undefined" class="all-pointer-events block full-height full-width"></a>
+  <q-card ref="cardRef" bordered>
+    <a href="#undefined" class="block full-height full-width rounded-borders overflow-hidden">
+      <q-img
+        :ratio="2 / 3"
+        width="250px"
+        :src="movie.poster_path && 'https://image.tmdb.org/t/p/w342' + movie.poster_path"
+        :alt="movie.title"
+      >
+        <template #loading>
+          <MovieCardSkeleton v-for="i in 20" :key="i" />
+        </template>
+      </q-img>
+    </a>
+
+    <div class="absolute-bottom rounded-borders overflow-hidden">
       <transition
         appear
         enter-active-class="animated fadeInUp"
         leave-active-class="animated fadeOutDown"
       >
-        <q-card-section v-if="hovering || focused" class="card-info-section absolute-bottom">
+        <q-card-section v-if="hovering || focused" class="card-info-section">
           <div class="row no-wrap justify-between items-center q-gutter-sm text-subtitle2">
             <span>{{ movie.title }}</span>
             <div class="row no-wrap q-gutter-sm">
@@ -21,9 +29,12 @@
                 color="grey-9"
                 icon="visibility"
                 :text-color="watched ? 'green-6' : 'white'"
+                aria-label="Toggle from watched list"
+                role="checkbox"
+                :aria-checked="`${watched}`"
                 @click="onClickToggleWatched(movie)"
               >
-                <q-tooltip :delay="700">Mark as watched </q-tooltip>
+                <q-tooltip :delay="700">Toggle from watched list </q-tooltip>
               </q-btn>
               <q-btn
                 size="10px"
@@ -31,9 +42,12 @@
                 color="grey-9"
                 :icon="watchlisted ? 'done' : 'add'"
                 :text-color="watchlisted ? 'green-6' : 'white'"
+                aria-label="Toggle from watchlist"
+                role="checkbox"
+                :aria-checked="`${watchlisted}`"
                 @click="onClickToggleWatchlist(movie)"
               >
-                <q-tooltip :delay="700">Add to watchlist </q-tooltip>
+                <q-tooltip :delay="700">Toggle from watchlist </q-tooltip>
               </q-btn>
             </div>
           </div>
@@ -52,10 +66,7 @@
           </div>
         </q-card-section>
       </transition>
-      <template v-slot:loading>
-        <MovieCardSkeleton v-for="i in 20" :key="i" />
-      </template>
-    </q-img>
+    </div>
   </q-card>
 </template>
 
@@ -76,7 +87,7 @@ const emit = defineEmits<{
   (e: 'toggleWatchlist', movie: Movie): void;
 }>();
 
-const cardRef = ref<HTMLDivElement>();
+const cardRef = ref<HTMLElement | null>(null);
 
 const hovering = useElementHover(cardRef, { delayLeave: 150 });
 const { focused } = useFocusWithin(cardRef);
@@ -96,8 +107,7 @@ const onClickToggleWatchlist = (movie: Movie) => {
 }
 
 a {
-  /* reduce the outline because q-img was hiding it with overflow-hidden */
-  outline-offset: -2px;
+  outline-offset: 3px;
 }
 
 .overview-text {
