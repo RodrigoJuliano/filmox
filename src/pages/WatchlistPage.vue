@@ -5,22 +5,20 @@
         <h2 class="text-h4 q-my-md">Watchlist</h2>
       </template>
       <MovieCard
-        v-for="movie in moviesWatchlist"
+        v-for="movie in watchlistStore.movies"
         :movie="movie"
         :key="movie.id"
         :watched="watchedlistStore.moviesIds.includes(movie.id)"
         :watchlisted="watchlistStore.moviesIds.includes(movie.id)"
-        @toggle-watchlist="toggleWatchlist"
-        @toggle-watched="toggleWatchedlist"
+        @toggle-watchlist="watchlistStore.toggle(movie)"
+        @toggle-watched="watchedlistStore.toggle(movie)"
       />
       <!-- Show skeletons while fetching -->
-      <template v-if="watchlistIds.length && !moviesWatchlist.length">
-        <q-card v-for="id in watchlistIds" :key="id">
-          <q-skeleton style="width: 250px; aspect-ratio: 2/3" />
-        </q-card>
+      <template v-if="watchlistStore.loading || watchlistStore.error">
+        <MovieCardSkeleton v-for="id in watchlistStore.moviesIds" :key="id" />
       </template>
       <!-- No movies added -->
-      <div v-if="!watchlistIds.length" class="q-pa-lg">
+      <div v-if="!watchlistStore.moviesIds.length" class="q-pa-lg">
         <p class="text-grey q-ma-none">No movies have been added yet.</p>
       </div>
     </MovieCardGrid>
@@ -29,20 +27,20 @@
         <h2 class="text-h4 q-my-md">Watched</h2>
       </template>
       <MovieCard
-        v-for="movie in moviesWatched"
+        v-for="movie in watchedlistStore.movies"
         :movie="movie"
         :key="movie.id"
-        :watched="watchedIds.includes(movie.id)"
-        :watchlisted="watchlistIds.includes(movie.id)"
-        @toggle-watchlist="toggleWatchlist"
-        @toggle-watched="toggleWatchedlist"
+        :watched="watchedlistStore.moviesIds.includes(movie.id)"
+        :watchlisted="watchlistStore.moviesIds.includes(movie.id)"
+        @toggle-watchlist="watchlistStore.toggle(movie)"
+        @toggle-watched="watchedlistStore.toggle(movie)"
       />
       <!-- Show skeletons while fetching -->
-      <template v-if="watchedIds.length && !moviesWatched.length">
-        <MovieCardSkeleton v-for="i in 20" :key="i" />
+      <template v-if="watchedlistStore.loading || watchlistStore.error">
+        <MovieCardSkeleton v-for="id in watchedlistStore.moviesIds" :key="id" />
       </template>
       <!-- No movies added -->
-      <div v-if="!watchedIds.length" class="q-pa-lg">
+      <div v-if="!watchedlistStore.moviesIds.length" class="q-pa-lg">
         <p class="text-grey q-ma-none">No movies have been marked as watched yet</p>
       </div>
     </MovieCardGrid>
@@ -51,23 +49,30 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { storeToRefs } from 'pinia';
+import { useQuasar } from 'quasar';
 import { useWatchedlistStore, useWatchlistStore } from 'stores/movies';
 import MovieCard from 'components/MovieCard.vue';
 import MovieCardGrid from 'components/MovieCardGrid.vue';
 import MovieCardSkeleton from 'components/MovieCardSkeleton.vue';
 
+const $q = useQuasar();
 const watchlistStore = useWatchlistStore();
 const watchedlistStore = useWatchedlistStore();
 
-const { moviesIds: watchlistIds, movies: moviesWatchlist } = storeToRefs(watchlistStore);
-const { moviesIds: watchedIds, movies: moviesWatched } = storeToRefs(watchedlistStore);
-
-const { fetchMovies: loadWatchlistMovies, toggle: toggleWatchlist } = watchlistStore;
-const { fetchMovies: loadWatchedMovies, toggle: toggleWatchedlist } = watchedlistStore;
-
 onMounted(() => {
-  loadWatchlistMovies();
-  loadWatchedMovies();
+  Promise.allSettled([watchlistStore.fetchMovies(), watchedlistStore.fetchMovies()]).then(
+    (values) => {
+      const rejecteds = values.filter((v) => v.status === 'rejected') as PromiseRejectedResult[];
+      if (rejecteds.length > 0) {
+        const error = rejecteds[0].reason as Error;
+        $q.notify({
+          type: 'negative',
+          position: 'top',
+          message: error.message,
+          caption: error.cause as string,
+        });
+      }
+    }
+  );
 });
 </script>

@@ -1,14 +1,23 @@
 <template>
   <q-card ref="cardRef" bordered>
-    <a href="#undefined" class="block full-height full-width rounded-borders overflow-hidden">
+    <a
+      href="#"
+      @click.prevent="onClickDetails"
+      class="block full-height full-width rounded-borders overflow-hidden"
+    >
       <q-img
         :ratio="2 / 3"
-        width="250px"
-        :src="movie.poster_path && 'https://image.tmdb.org/t/p/w342' + movie.poster_path"
+        class="image"
+        :src="movie.poster_path ? `https://image.tmdb.org/t/p/w342${movie.poster_path}` : 'error'"
         :alt="movie.title"
       >
         <template #loading>
-          <MovieCardSkeleton v-for="i in 20" :key="i" />
+          <MovieCardSkeleton />
+        </template>
+        <template #error>
+          <div class="full-height flex flex-center text-h6">
+            {{ movie.title }}
+          </div>
         </template>
       </q-img>
     </a>
@@ -32,7 +41,7 @@
                 aria-label="Toggle from watched list"
                 role="checkbox"
                 :aria-checked="`${watched}`"
-                @click="onClickToggleWatched(movie)"
+                @click="onClickToggleWatched"
               >
                 <q-tooltip :delay="700">Toggle from watched list </q-tooltip>
               </q-btn>
@@ -45,7 +54,7 @@
                 aria-label="Toggle from watchlist"
                 role="checkbox"
                 :aria-checked="`${watchlisted}`"
-                @click="onClickToggleWatchlist(movie)"
+                @click="onClickToggleWatchlist"
               >
                 <q-tooltip :delay="700">Toggle from watchlist </q-tooltip>
               </q-btn>
@@ -55,7 +64,7 @@
             <!-- <q-badge class="bg-grey-9"> Action </q-badge> -->
             <q-badge class="bg-grey-9" style="font-size: 14px">
               <q-icon name="star" style="margin-right: 5px" />
-              {{ movie.vote_average }}
+              {{ movie.vote_average.toFixed(1) }}
             </q-badge>
             <div class="text-grey-3" style="">
               {{ new Date(movie.release_date).getFullYear() }}
@@ -72,19 +81,23 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useQuasar } from 'quasar';
 import { useElementHover, useFocusWithin } from '@vueuse/core';
 import { Movie } from './models';
 import MovieCardSkeleton from 'components/MovieCardSkeleton.vue';
+import MovieDetailsDialog from '../components/MovieDetailsDialog.vue';
 
-defineProps<{
+const $q = useQuasar();
+
+const props = defineProps<{
   movie: Movie;
   watched: boolean;
   watchlisted: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'toggleWatched', movie: Movie): void;
-  (e: 'toggleWatchlist', movie: Movie): void;
+  (e: 'toggleWatched'): void;
+  (e: 'toggleWatchlist'): void;
 }>();
 
 const cardRef = ref<HTMLElement | null>(null);
@@ -92,18 +105,45 @@ const cardRef = ref<HTMLElement | null>(null);
 const hovering = useElementHover(cardRef, { delayLeave: 150 });
 const { focused } = useFocusWithin(cardRef);
 
-const onClickToggleWatched = (movie: Movie) => {
-  emit('toggleWatched', movie);
+const onClickToggleWatched = () => {
+  emit('toggleWatched');
 };
 
-const onClickToggleWatchlist = (movie: Movie) => {
-  emit('toggleWatchlist', movie);
+const onClickToggleWatchlist = () => {
+  emit('toggleWatchlist');
+};
+
+const onClickDetails = () => {
+  $q.dialog({
+    component: MovieDetailsDialog,
+    componentProps: { movie: props.movie },
+  });
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+:root {
+  --card_width: 250px;
+  @media (max-width: $breakpoint-xs-max) {
+    --card_width: 145px;
+  }
+  @media (max-width: 340px) {
+    --card_width: calc(100vw - 16px); // 16px margin
+  }
+}
+</style>
+
+<style scoped lang="scss">
+.image {
+  width: var(--card_width);
+}
+
 .card-info-section {
   background: rgba(0, 0, 0, 0.932);
+  // Wont show info card info on small screens
+  @media (max-width: $breakpoint-xs-max) {
+    display: none;
+  }
 }
 
 a {

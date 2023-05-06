@@ -10,8 +10,8 @@
         :key="movie.id"
         :watched="watchedlistStore.moviesIds.includes(movie.id)"
         :watchlisted="watchlistStore.moviesIds.includes(movie.id)"
-        @toggle-watchlist="watchlistStore.toggle"
-        @toggle-watched="watchedlistStore.toggle"
+        @toggle-watchlist="watchlistStore.toggle(movie)"
+        @toggle-watched="watchedlistStore.toggle(movie)"
       />
       <!-- Show skeletons while fetching -->
       <template v-if="loading">
@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from 'vue';
+import { useQuasar } from 'quasar';
 import { useWatchedlistStore, useWatchlistStore } from 'stores/movies';
 import { useFetchMoveis } from '../composables/useFetchMovies';
 import MovieCard from 'components/MovieCard.vue';
@@ -33,11 +35,22 @@ const props = defineProps<{
   query: string;
 }>();
 
+const $q = useQuasar();
 const watchlistStore = useWatchlistStore();
 const watchedlistStore = useWatchedlistStore();
-
 const { movies, loading, error, fetchMoreMovies } = useFetchMoveis('/search/movie', {
   include_adult: 'false',
   query: props.query,
+});
+
+watch(error, (error) => {
+  if (error) {
+    $q.notify({
+      type: 'negative',
+      position: 'top',
+      message: 'Could not load movies',
+      caption: error,
+    });
+  }
 });
 </script>

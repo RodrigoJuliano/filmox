@@ -4,7 +4,7 @@
 
 <style scoped>
 .skeleton {
-  width: 250px;
+  width: var(--card_width);
   aspect-ratio: 2/3;
 }
 </style>

@@ -11,6 +11,7 @@
           v-model="searchText"
           dense
           standout
+          type="search"
           placeholder="Search..."
           ref="searchElementRef"
           class="input"

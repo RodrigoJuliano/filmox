@@ -54,7 +54,7 @@ defineProps<{
   open: boolean;
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
   (e: 'update:open', value: boolean): void;
 }>();
 </script>
